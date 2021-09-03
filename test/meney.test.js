@@ -67,6 +67,16 @@ contract('money', accounts => {
 
         });
 
+
+        it ('Enable to add supply eith time' ,async()=>{
+            await time.increase();
+            await moneyInstance.addSupply({from:address1});
+            const balance0 = await moneyInstance.balances(address1);
+            const supply = await moneyInstance.supply();
+            expect(balance0.toNumber()).to.equal(1000);
+            expect(supply.toNumber()).to.equal(2000);
+        });
+
     });
 
 });
