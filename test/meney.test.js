@@ -1,5 +1,6 @@
 const money = artifacts.require('Money');
 const expect = require('chai').expect;
+const time = require('./utils/time');
 
 
 contract('money', accounts => {
@@ -46,7 +47,7 @@ contract('money', accounts => {
                 });
 
                 // si la anterior linea no salta el error, se da por fallido el test
-                expect(result.receiot.status).to.equal(false);
+                expect(result.receipt.status).to.equal(false);
             } catch (error) {
                 expect(error.reason).to.equal('Insufficient balance');
             }
@@ -68,7 +69,7 @@ contract('money', accounts => {
         });
 
 
-        it ('Enable to add supply eith time' ,async()=>{
+        it ('Enable to add supply with time' , async()=>{
             await time.increase();
             await moneyInstance.addSupply({from:address1});
             const balance0 = await moneyInstance.balances(address1);
@@ -76,6 +77,36 @@ contract('money', accounts => {
             expect(balance0.toNumber()).to.equal(1000);
             expect(supply.toNumber()).to.equal(2000);
         });
+
+        it ('Unable to add supply out of time' , async()=>{           
+            try {
+                const result = await moneyInstance.addSupply({from:address1});
+                expect(result.receipt.status).to.equal(false);
+            } catch (error) {
+                expect(error.reason).to.equal('Error time');
+            }
+        });
+
+
+        it ('Add function with permission', async() => {
+            const result = await moneyInstance.add(10,20, {from: address0})
+            expect(result.toNumber()).to.equal(30);
+        });
+
+        
+        it('Add function from NOT permission', async () => {            
+            try {
+                const result = await moneyInstance.add(10,20, {from: address1});
+                expect (result.receipt.status).to.equal(false);
+                
+            } catch (error) {
+
+                expect(error.reason).to.equal('Without permission');
+
+            }
+        });
+        
+
 
     });
 

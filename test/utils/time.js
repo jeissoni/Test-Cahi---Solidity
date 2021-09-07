@@ -1,5 +1,5 @@
 async function increase() {
-    const onWeek = 60  * 60 * 24 * 7 // seconds  * minutes * hours * days 
+    const onWeek = (60  * 60 * 24 * 7) + 1 // seconds  * minutes * hours * days 
 
     //viajar en el tiempo
     await  web3.currentProvider.send({
