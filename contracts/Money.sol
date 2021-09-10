@@ -35,7 +35,6 @@ contract Money {
 
     function add(uint256 x, uint256 y) public view returns (uint256) {
         require(msg.sender == owner, "Without permission");
-
         return x + y;
     }
 }

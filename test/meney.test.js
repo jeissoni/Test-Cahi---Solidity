@@ -34,6 +34,14 @@ contract('money', accounts => {
             const balances = await moneyInstance.balances(address0);
             expect(balances.toNumber()).to.equal(1000);
         });
+
+
+        it('owner is addres0', async()=>{
+            const owner = await moneyInstance.owner();
+            expect(owner).to.equal(address0);
+        });
+
+
     });
 
 
@@ -95,15 +103,19 @@ contract('money', accounts => {
 
         
         it('Add function from NOT permission', async () => {            
+           
+            let err = null;
             try {
-                const result = await moneyInstance.add(10,20, {from: address1});
-                expect (result.receipt.status).to.equal(false);
-                
+
+                const result = await moneyInstance.add(10,20,{from:address1});
+                expect(result.receipt.status).to.equal(false);
+
             } catch (error) {
-
-                expect(error.reason).to.equal('Without permission');
-
+                err = error;                
             }
+
+            assert.ok(err instanceof Error);
+                      
         });
         
 
